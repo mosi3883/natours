@@ -70,6 +70,52 @@ app.get('/api/v1/tours/:tourId', (req, res) => {
   });
 });
 
+app.patch('/api/v1/tours/:tourId', (req, res) => {
+  const { tourId } = req.params;
+  const tour = tours.find((tour) => tour.id === +tourId);
+  if (!tour) {
+    res.status(404).json({
+      status: 'fail',
+      message: 'tour not found!',
+    });
+  }
+  const newTours = tours.map((tour) => {
+    if (tour.id === +tourId) {
+      return Object.assign(tour, req.body);
+    } else {
+      return tour;
+    }
+  });
+  const updatedTour = {};
+  res.json(200).json({
+    status: 'success',
+    data: {
+      tour,
+      status: 'success',
+      data: {
+        tour: updatedTour,
+      },
+    },
+  });
+});
+
+app.delete('/api/v1/tours/:tourId', (req, res) => {
+  const { tourId } = req.params;
+  const tour = tours.find((tour) => tour.id === +tourId);
+  if (!tour) {
+    res.status(404).json({
+      status: 'fail',
+      message: 'tour not found!',
+    });
+  } else {
+    const deletedTour = {};
+    res.status(204).json({
+      status: 'success',
+      data: null,
+    });
+  }
+});
+
 // creating server
 const port = 8000;
 app.listen(port, () => {
