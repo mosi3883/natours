@@ -5,6 +5,22 @@ const express = require('express');
 const app = express();
 app.use(express.json());
 
+app.use((req, res, next) => {
+  console.log('Hello from middleware ✋');
+  next();
+});
+
+app.use((req, res, next) => {
+  console.log('another middleware 🙂');
+  req.requestTime = new Date().toISOString();
+  next();
+});
+// for specific route
+app.use('/a', (req, res, next) => {
+  console.log(req.requestTime);
+  next();
+});
+
 const tours = JSON.parse(
   fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`, 'utf-8')
 );
