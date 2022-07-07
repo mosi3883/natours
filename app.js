@@ -1,3 +1,4 @@
+// app.js mainly used for middleware declartion
 const morgan = require('morgan');
 const express = require('express');
 const tourRouter = require('./routes/tourRoutes');
@@ -25,6 +26,7 @@ app.use('/a', (req, res, next) => {
 });
 
 // Routes
+// mounting routers
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
 
