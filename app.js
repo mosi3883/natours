@@ -1,7 +1,7 @@
-const fs = require('fs');
 const morgan = require('morgan');
 const express = require('express');
-
+const tourRouter = require('./routes/tourRoutes');
+const userRouter = require('./routes/userRoutes');
 const app = express();
 // middlewares
 app.use(express.json());
@@ -24,157 +24,8 @@ app.use('/a', (req, res, next) => {
   next();
 });
 
-const tours = JSON.parse(
-  fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`, 'utf-8')
-);
-// route handlers
-const getAllTours = (req, res) => {
-  res.status(200).json({
-    status: 'success',
-    results: tours.length,
-    data: {
-      tours,
-    },
-  });
-};
-
-const createTour = (req, res) => {
-  const newId = tours[tours.length - 1].id + 1;
-  const newTour = Object.assign({ id: newId }, req.body);
-
-  tours.push(newTour);
-  fs.writeFile(
-    `${__dirname}/dev-data/data/tours-simple.json`,
-    JSON.stringify(tours),
-    'utf-8',
-    (err) => {
-      if (err) {
-      }
-      res.status(201).json({
-        status: 'success',
-        data: {
-          tour: newTour,
-        },
-      });
-    }
-  );
-};
-
-const getTour = (req, res) => {
-  const { tourId } = req.params;
-  const tour = tours.find((tour) => tour.id === +tourId);
-  if (!tour) {
-    res.status(404).json({
-      status: 'fail',
-      message: 'tour not found!',
-    });
-  } else {
-    res.status(200).json({
-      status: 'success',
-      data: {
-        tour,
-      },
-    });
-  }
-};
-
-const updateTour = (req, res) => {
-  const { tourId } = req.params;
-  const tour = tours.find((tour) => tour.id === +tourId);
-  if (!tour) {
-    res.status(404).json({
-      status: 'fail',
-      message: 'tour not found!',
-    });
-  }
-  const newTours = tours.map((tour) => {
-    if (tour.id === +tourId) {
-      return Object.assign(tour, req.body);
-    } else {
-      return tour;
-    }
-  });
-  const updatedTour = {};
-  res.json(200).json({
-    status: 'success',
-    data: {
-      tour,
-      status: 'success',
-      data: {
-        tour: updatedTour,
-      },
-    },
-  });
-};
-
-const deleteTour = (req, res) => {
-  const { tourId } = req.params;
-  const tour = tours.find((tour) => tour.id === +tourId);
-  if (!tour) {
-    res.status(404).json({
-      status: 'fail',
-      message: 'tour not found!',
-    });
-  } else {
-    const deletedTour = {};
-    res.status(204).json({
-      status: 'success',
-      data: null,
-    });
-  }
-};
-
-// users route handlers
-
-const getAllUsers = (req, res) => {
-  res.status(500).json({
-    status: 'error',
-    message: 'route not implemented yet!',
-  });
-};
-
-const getUser = (req, res) => {
-  res.status(500).json({
-    status: 'error',
-    message: 'route not implemented yet!',
-  });
-};
-
-const createUser = (req, res) => {
-  res.status(500).json({
-    status: 'error',
-    message: 'route not implemented yet!',
-  });
-};
-
-const updateUser = (req, res) => {
-  res.status(500).json({
-    status: 'error',
-    message: 'route not implemented yet!',
-  });
-};
-
-const deleteUser = (req, res) => {
-  res.status(500).json({
-    status: 'error',
-    message: 'route not implemented yet!',
-  });
-};
-
 // Routes
-// tours
-const tourRouter = express.Router();
-tourRouter.route('/').get(getAllTours).post(createTour);
-tourRouter.route('/:tourId').get(getTour).patch(updateTour).delete(deleteTour);
-
 app.use('/api/v1/tours', tourRouter);
-
-// users
-const userRouter = express.Router();
-tourRouter.route('/').get(getAllUsers).post(createUser);
-
-tourRouter.route('/:userId').get(getUser).patch(updateUser).delete(deleteUser);
-
 app.use('/api/v1/users', userRouter);
 
 // creating server
