@@ -9,7 +9,9 @@ const app = express();
 app.use(express.json());
 // serve static
 app.use(express.static(`${__dirname}/public`));
-app.use(morgan('dev'));
+if (process.env.NODE_ENV === 'development') {
+  app.use(morgan('dev'));
+}
 
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
