@@ -7,6 +7,8 @@ const userRouter = require('./routes/userRoutes');
 const app = express();
 // middlewares
 app.use(express.json());
+// serve static
+app.use(express.static(`${__dirname}/public`));
 app.use(morgan('dev'));
 
 app.use('/api/v1/tours', tourRouter);
