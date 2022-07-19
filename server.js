@@ -11,43 +11,22 @@ const main = async () => {
   try {
     const conn = await mongoose.connect(dbString);
     // console.log(conn.connections);
+    console.log('DB Connection success');
   } catch (err) {
     console.log(`connection error (${err.message})`);
   }
 };
 main();
 
-// creating schema
-const tourSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: [true, 'A tour must have a name!'],
-    unique: true,
-  },
-  // rating: Number,
-  rating: {
-    type: Number,
-    default: 4.5,
-  },
-  price: {
-    type: Number,
-    required: [true, 'A tour must have a price'],
-  },
-});
+// const testTour = new Tour({
+//   name: 'The Forest hiker 3',
+//   price: 549,
+// });
 
-// creating model
-
-const Tour = mongoose.model('Tour', tourSchema);
-
-const testTour = new Tour({
-  name: 'The Forest hiker 3',
-  price: 549,
-});
-
-testTour
-  .save()
-  .then((doc) => console.log(doc))
-  .catch((err) => console.log('Error ', err.message));
+// testTour
+//   .save()
+//   .then((doc) => console.log(doc))
+//   .catch((err) => console.log('Error ', err.message));
 
 // creating server
 const port = process.env.PORT || 8000;

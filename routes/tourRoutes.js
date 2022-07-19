@@ -9,7 +9,7 @@ const router = express.Router();
 //   next();
 // });
 
-router.param('tourId', tourController.checkID);
+// router.param('tourId', tourController.checkID);
 
 router
   .route('/')

@@ -1,19 +1,22 @@
 const fs = require('fs');
-const tours = JSON.parse(
-  fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`, 'utf-8')
-);
+const Tour = require('./../models/tourModel');
+// const tours = JSON.parse(
+//   fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`, 'utf-8')
+// );
 
-exports.checkID = (req, res, next, val) => {
-  const tour = tours.find((tour) => tour.id === +val);
-  if (!tour) {
-    return res.status(404).json({
-      status: 'fail',
-      message: 'tour id is not valid',
-    });
-  } else {
-    next();
-  }
-};
+const tours = [];
+
+// exports.checkID = (req, res, next, val) => {
+//   const tour = tours.find((tour) => tour.id === +val);
+//   if (!tour) {
+//     return res.status(404).json({
+//       status: 'fail',
+//       message: 'tour id is not valid',
+//     });
+//   } else {
+//     next();
+//   }
+// };
 
 exports.checkBody = (req, res, next) => {
   if (!req.body.name || !req.body.price) {
