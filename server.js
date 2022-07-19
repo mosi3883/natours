@@ -10,7 +10,7 @@ const dbString = process.env.DATABASE.replace('<USERNAME>', process.env.DB_USER)
 const main = async () => {
   try {
     const conn = await mongoose.connect(dbString);
-    console.log(conn.connections);
+    // console.log(conn.connections);
   } catch (err) {
     console.log(`connection error (${err.message})`);
   }
@@ -38,6 +38,16 @@ const tourSchema = new mongoose.Schema({
 // creating model
 
 const Tour = mongoose.model('Tour', tourSchema);
+
+const testTour = new Tour({
+  name: 'The Forest hiker 3',
+  price: 549,
+});
+
+testTour
+  .save()
+  .then((doc) => console.log(doc))
+  .catch((err) => console.log('Error ', err.message));
 
 // creating server
 const port = process.env.PORT || 8000;
