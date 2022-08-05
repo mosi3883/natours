@@ -29,14 +29,23 @@ const tours = [];
 // };
 
 // route handlers
-exports.getAllTours = (req, res) => {
-  res.status(200).json({
-    status: 'success',
-    results: tours.length,
-    data: {
-      tours,
-    },
-  });
+exports.getAllTours = async (req, res) => {
+  try {
+    const tours = await Tour.find();
+
+    res.status(200).json({
+      status: 'success',
+      results: tours.length,
+      data: {
+        tours,
+      },
+    });
+  } catch (err) {
+    res.status(400).json({
+      status: 'fail',
+      message: err.message,
+    });
+  }
 };
 
 exports.createTour = async (req, res) => {
@@ -62,15 +71,23 @@ exports.createTour = async (req, res) => {
   }
 };
 
-exports.getTour = (req, res) => {
-  const { tourId } = req.params;
-  const tour = tours.find((tour) => tour.id === +tourId);
-  res.status(200).json({
-    status: 'success',
-    data: {
-      tour,
-    },
-  });
+exports.getTour = async (req, res) => {
+  try {
+    const { tourId } = req.params;
+    const tour = await Tour.findById(tourId);
+    // const tour = await Tour.findOne({ _id: tourId });
+    res.status(200).json({
+      status: 'success',
+      data: {
+        tour,
+      },
+    });
+  } catch (err) {
+    res.status(400).json({
+      status: 'fail',
+      message: err.message,
+    });
+  }
 };
 
 exports.updateTour = (req, res) => {
