@@ -90,28 +90,27 @@ exports.getTour = async (req, res) => {
   }
 };
 
-exports.updateTour = (req, res) => {
-  const { tourId } = req.params;
-  const tour = tours.find((tour) => tour.id === +tourId);
+exports.updateTour = async (req, res) => {
+  try {
+    const { tourId } = req.params;
+    const updatedTour = await Tour.findByIdAndUpdate(tourId, req.body, {
+      return: true,
+      new: true,
+      runValidators: true,
+    });
 
-  // const newTours = tours.map((tour) => {
-  //   if (tour.id === +tourId) {
-  //     return Object.assign(tour, req.body);
-  //   } else {
-  //     return tour;
-  //   }
-  // });
-  exports.updatedTour = {};
-  res.json(200).json({
-    status: 'success',
-    data: {
-      tour,
+    res.status(200).json({
       status: 'success',
       data: {
         tour: updatedTour,
       },
-    },
-  });
+    });
+  } catch (err) {
+    res.status(400).json({
+      status: 'fail',
+      message: err.message,
+    });
+  }
 };
 
 exports.deleteTour = (req, res) => {
