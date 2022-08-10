@@ -31,8 +31,25 @@ const tours = [];
 // route handlers
 exports.getAllTours = async (req, res) => {
   try {
-    const tours = await Tour.find();
+    // access query strings with req.query
+    //console.log(req.query);
+    // first way of filtering
+    //const tours = await Tour.find(req.query);
 
+    // second way of filtering(using where equals ,lt,lte,lg,lgt,... methids)
+    // // remmeber find will return Query so we can chain othermethods(like where,lt,...)
+    // const tours = await Tour.find()
+    //   .where('duration')
+    //   .equals(5)
+    //   .where('difficulty')
+    //   .equals('easy');
+    // creating query
+    const queryObj = { ...req.query };
+    const excludedFields = ['page', 'sort', 'limit', 'fields'];
+    excludedFields.forEach((el) => delete queryObj[el]); // remove excludes
+    const query = Tour.find(queryObj); // if we await here we cant chain methods on result
+
+    const tours = await query; // converting query to document(execute query after chaning methods)
     res.status(200).json({
       status: 'success',
       results: tours.length,
