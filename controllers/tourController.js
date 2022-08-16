@@ -47,7 +47,20 @@ exports.getAllTours = async (req, res) => {
     const queryObj = { ...req.query };
     const excludedFields = ['page', 'sort', 'limit', 'fields'];
     excludedFields.forEach((el) => delete queryObj[el]); // remove excludes
-    const query = Tour.find(queryObj); // if we await here we cant chain methods on result
+
+    // advanced
+    let queryStr = JSON.stringify(queryObj);
+    queryStr = queryStr.replace(/\b(gt|gte|lt|lte)\b/g, (match) => `$${match}`);
+    const newQuereyObj = JSON.parse(queryStr);
+    const query = Tour.find(newQuereyObj); // if we await here we cant chain methods on result
+
+    // find on advanced filtering
+    // {   difficulty: 'easy', duration: {$gte: 5}  }
+
+    // query string on advanced filtering
+    // 127.0.0.1:9000/api/v1/tours?duration[gte]=5&difficulty=easy
+    // console.log(req.query); { difficulty: 'easy', duration: { gte: '5' } }
+    // so will need convert gte to $gte
 
     const tours = await query; // converting query to document(execute query after chaning methods)
     res.status(200).json({
